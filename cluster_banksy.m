@@ -1,6 +1,8 @@
 function [idx]=cluster_banksy(X,xy,numclass,nnk,lamda)
 
 %REF: https://doi.org/10.1101/2022.04.14.488259
+% BANKSY: A Spatial Omics Algorithm that Unifies Cell Type Clustering 
+% and Tissue Domain Segmentation
 
 if nargin<3, numclass=4; end
 if nargin<4, nnk=10; end

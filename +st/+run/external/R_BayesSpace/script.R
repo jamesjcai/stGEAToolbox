@@ -7,6 +7,7 @@ library(rhdf5)
 # library(ggplot2)
 # setwd("C:\\Users\\jcai\\Documents\\GitHub\\spatial_transcriptomics\\external\\R_BayesSpace")
 # setwd("U:\\GitHub\\spatial_transcriptomics\\external\\R_BayesSpace")
+# setwd("D:\\GitHub\\stGEAToolbox\\+st\\+run\\external\\R_BayesSpace")
 
 usingmat<-TRUE
 
@@ -69,11 +70,11 @@ sce.enhanced <- spatialEnhance(sce, q=6, platform="Visium", d=7,
 write.csv(colData(sce.enhanced), "positions_enhanced.csv");
 
 
-markers <- c("PMEL", "CD2", "CD19", "COL1A1")
+markers <- c("G6PD", "CD2", "CMC4")
 sce.enhanced <- enhanceFeatures(sce.enhanced, sce,
                                      feature_names=markers,
                                      nrounds=0)
-X<-logcounts(sce.enhanced)[markers, 1:5]
+X<-logcounts(sce.enhanced)[markers, 1:3]
 h5createFile("output.h5")
 h5write(as.matrix(X), "output.h5","/X")
 

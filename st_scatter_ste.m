@@ -1205,7 +1205,7 @@ gui_currenthandle=[];
                 labels = {'Save STE to variable named:',...
                     'Save STE.SCE to variable named:','Save STE.XY to variable named:'}; 
                 vars = {'ste','sce','xy'};
-                values = {ste,ste.sce};
+                values = {ste,ste.sce,ste.xy};
                 [~,OKPressed]=export2wsdlg(labels,vars,values,...
                     'Save Data to Workspace',logical([1 0 0]));
             case 'MAT file'

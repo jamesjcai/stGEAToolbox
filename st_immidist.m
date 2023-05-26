@@ -1,4 +1,5 @@
 function [D]=st_immidist(ste)
+
 [imarray]=st_sampleimg(ste.img,ste.xy,10);
 D=zeros(length(imarray));
 for k=1:length(imarray)
