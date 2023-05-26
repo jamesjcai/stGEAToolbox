@@ -14,6 +14,7 @@ pkg.i_deletefiles({'input.txt','input.mat','positions.csv', ...
 X=ste.sce.X;
 save('input.mat','X','-v7.3')
 writepositions(ste,'positions.csv');
+%Rpath=getpref('scgeatoolbox','rexecutablepath');
 pkg.RunRcode('script.R');
 
 web('Rplots.pdf','-browser')

@@ -44,7 +44,7 @@ i_addmenu(m_exp,1,{@gui.i_savemainfig,3},'Save Figure to PowerPoint File...');
 i_addmenu(m_exp,0,{@gui.i_savemainfig,2},'Save Figure as Graphic File...');
 i_addmenu(m_exp,0,{@gui.i_savemainfig,1},'Save Figure as SVG File...');
 i_addmenu(m_exp,1,{@(~,~) web('https://github.com/jamesjcai/stGEAToolbox')},'Visit stGEAToolbox GitHub Site...');
-i_addmenu(m_exp,0,@gui.callback_CheckUpdates,'Check for Updates...');
+i_addmenu(m_exp,0,@st.gui.callback_CheckUpdates,'Check for Updates...');
 
 currentrotview=2;
 dsize=15;
