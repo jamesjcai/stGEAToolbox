@@ -96,6 +96,8 @@ xy=[x_pixel y_pixel];
  ste=SpatialTranscriptomicsExperiment(sce,xy,img);
  ste.tissue_positions_list=T;
  ste.scalefactors_json=scalef;
+    metainfo=sprintf("Source: %s",selpath);
+    ste=ste.appendmetainfo(metainfo);
 
     function [out,aff]=i_guessmtxfile(selpath)
     out=[]; aff=[];

@@ -5,6 +5,7 @@ classdef SpatialTranscriptomicsExperiment
         xy                         % initial position of spot spatial map
         tissue_positions_list
         scalefactors_json          % https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/output/images
+        metadata string
     end
     properties (Dependent)
       NumSpots
@@ -24,7 +25,8 @@ classdef SpatialTranscriptomicsExperiment
           end
           obj.sce=sce;
           obj.xy=xy;
-          obj.img=img;          
+          obj.img=img;
+          obj.metadata=string(sprintf('Created: %s',datetime()));
       end
 
 %    function out = get.s(obj)
@@ -75,6 +77,13 @@ classdef SpatialTranscriptomicsExperiment
       fprintf('%s%d\n','NumGenes is: ',obj.sce.NumGenes)
       error('You cannot set NumGenes property'); 
    end
+
+    function obj = appendmetainfo(obj,infostr)
+        if ~isstring(infostr)
+            infostr=string(infostr);
+        end
+        obj.metadata = [obj.metadata; infostr];
+    end   
  
     function r=numspots(obj)
         r=size(obj.sce.X,2);
@@ -85,4 +94,6 @@ classdef SpatialTranscriptomicsExperiment
     end
 
    end
+
+   
 end

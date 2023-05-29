@@ -121,7 +121,9 @@ end
  ste=SpatialTranscriptomicsExperiment(sce,xy,img);
  ste.tissue_positions_list=T;
  ste.scalefactors_json=scalef;
-
+ metainfo=sprintf("Source: %s",acc);
+ ste=ste.appendmetainfo(metainfo);
+ 
 end
 
 function [f]=i_setupfile(c)

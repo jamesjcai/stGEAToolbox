@@ -51,10 +51,9 @@ i_addmenu(m_ext,1,@callback_BAYESSPACE,'Run BayesSpace [PMID:34083791]...');
 m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
 i_addmenu(m_exp,0,@callback_SHOWRIDGESPOTS,'Show ridge cells...');
 i_addmenu(m_exp,0,@callback_SHOWRIDGESPOTS2,'Show ridge cells 2...');
-i_addmenu(m_exp,1,@callback_TENIFOLDXCT,'scTenifoldXct...');
+%i_addmenu(m_exp,1,@callback_TENIFOLDXCT,'scTenifoldXct...');
 i_addmenu(m_exp,1,{@callback_RIDGECCI,1},'Detect cell-cell interactions using RidgeCCI comparison...');
 i_addmenu(m_exp,0,{@callback_RIDGECCI,2},'Detect cell-cell interactions using RidgeCCI permutation...');
-
 i_addmenu(m_exp,1,@gui.callback_ViewMetaData,'View Metadata...');
 i_addmenu(m_exp,1,{@gui.i_savemainfig,3},'Save Figure to PowerPoint File...');
 i_addmenu(m_exp,0,{@gui.i_savemainfig,2},'Save Figure as Graphic File...');
@@ -160,7 +159,8 @@ title(hAx,ste.title);
 set(FigureHandle, 'visible', 'on');
 gui_startpoint = [];
 gui_currenthandle=[];
-% guidata(FigureHandle, ste);
+guidata(FigureHandle, ste);
+
 
 
 % ------------------------
@@ -624,20 +624,19 @@ gui_currenthandle=[];
 %                 nypairs, nnpairs),sprintf('K=%d',K));
     end
 
-    function callback_TENIFOLDXCT(~,~)
-        [x1,x2]=i_pickridgegrps;
-        if isempty(x1) || isempty(x2), return; end
-        % xxx
-        fw=gui.gui_waitbar;
-        sce.c_cell_type_tx=string(c);
-        [T]=run.py_scTenifoldXct(sce,string(x1),string(x2),false);
-            gui.gui_waitbar(fw);
-        if ~isempty(T)
-            gui.i_exporttable(T);
-        else
-            helpdlg('No ligand-receptor pairs are identified.','');
-        end
-    end
+    % function callback_TENIFOLDXCT(~,~)
+    %     [x1,x2]=i_pickridgegrps;
+    %     if isempty(x1) || isempty(x2), return; end        
+    %     fw=gui.gui_waitbar;
+    %     sce.c_cell_type_tx=string(c);
+    %     [T]=run.py_scTenifoldXct(sce,string(x1),string(x2),false);
+    %         gui.gui_waitbar(fw);
+    %     if ~isempty(T)
+    %         gui.i_exporttable(T);
+    %     else
+    %         helpdlg('No ligand-receptor pairs are identified.','');
+    %     end
+    % end
 
     function callback_RIDGECCI(~,~,methodid)
         if nargin<3, methodid=1; end

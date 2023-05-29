@@ -67,6 +67,8 @@ if nargin<1, acc='GSM4284323'; end
 
 
     sce=SingleCellExperiment(X,g,xy);
+    metainfo=sprintf("Source: %s",acc);
+    sce=sce.appendmetainfo(metainfo);    
 end
 
 function f=i_setupfile(c)    
