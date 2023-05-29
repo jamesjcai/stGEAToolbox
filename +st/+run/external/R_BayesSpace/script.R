@@ -69,12 +69,12 @@ sce.enhanced <- spatialEnhance(sce, q=6, platform="Visium", d=7,
 
 write.csv(colData(sce.enhanced), "positions_enhanced.csv");
 
-
-markers <- c("G6PD", "CD2", "CMC4")
+markers <- c("G1", "G2", "G3", "G4")
+# markers <- paste0("G", seq_len(nrow(countMatrix)))
 sce.enhanced <- enhanceFeatures(sce.enhanced, sce,
-                                     feature_names=markers,
-                                     nrounds=0)
-X<-logcounts(sce.enhanced)[markers, 1:3]
+                                    feature_names=markers,
+                                    nrounds=0)
+X<-logcounts(sce.enhanced)[markers,]
 h5createFile("output.h5")
 h5write(as.matrix(X), "output.h5","/X")
 
