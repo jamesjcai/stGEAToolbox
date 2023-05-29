@@ -31,6 +31,11 @@ a=findall(FigureHandle,'tag','figMenuGenerateCode'); delete(a);
 
 hAx = axes('Parent', FigureHandle);
 
+m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
+i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
+i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
+i_addmenu(m_ext,1,@callback_BAYESSPACE,'Run BayesSpace...');
+
 
 m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
 i_addmenu(m_exp,0,@callback_SHOWRIDGESPOTS,'Show ridge cells...');
@@ -1223,6 +1228,25 @@ gui_currenthandle=[];
                 return;
         end
     end
+
+    function callback_BAYESSPACE(~,~)
+        [glist]=gui.i_selectngenes(sce);
+        try
+            [T,X]=st.run.BayesSpace(ste,glist);
+        catch ME
+            errordlg(ME.message);
+        end
+        figure;
+        scatter(T.row,T.col,15,T.spatial_cluster,'filled');
+        axis ij;
+
+        sce1=SingleCellExperiment(X,glist);
+        for k=1:length(glist)
+             i_cascadeexpr(sce1,glist(k),[T.row,T.col],k);
+        end
+    end
+
+% --------------------------
 
     function [txt] = i_myupdatefcnx1(~,event_obj)
         % pos = event_obj.Position;

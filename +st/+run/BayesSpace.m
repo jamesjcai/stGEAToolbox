@@ -3,8 +3,10 @@ function [T,X]=BayesSpace(ste,markers)
 
 if nargin<2, markers=[]; end
 if ~isempty(markers)
-    assert(all(ismember(markers,ste.sce.g)));
-    n=length(markers)
+    [y,idx]=ismember(markers,ste.sce.g);
+    assert(all(y));
+else
+    idx=[];
 end
 T=[]; X=[];
 isdebug=false;
@@ -22,7 +24,7 @@ if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 % sc_writefile('input.txt',ste.sce.X, ste.sce.g);
 
 X=ste.sce.X;
-save('input.mat','X','-v7.3')
+save('input.mat','X','idx','-v7.3')
 writepositions(ste,'positions.csv');
 
 Rpath=getpref('scgeatoolbox','rexecutablepath');
@@ -32,18 +34,18 @@ if ~exist('output.h5','file'), return; end
 web('Rplots.pdf','-browser')
 T=readtable("positions_enhanced.csv");
 
-figure;
-scatter(T.row,T.col,[],T.spatial_cluster)
+%figure;
+%scatter(T.row,T.col,[],T.spatial_cluster)
 X=h5read('output.h5','/X');
-figure;
-subplot(2,2,1)
-scatter(T.row,T.col,[],X(1,:))
-subplot(2,2,2)
-scatter(T.row,T.col,[],X(2,:))
-subplot(2,2,3)
-scatter(T.row,T.col,[],X(3,:))
-subplot(2,2,4)
-scatter(T.row,T.col,[],X(4,:))
+%figure;
+%subplot(2,2,1)
+%scatter(T.row,T.col,[],X(1,:))
+%subplot(2,2,2)
+%scatter(T.row,T.col,[],X(2,:))
+%subplot(2,2,3)
+%scatter(T.row,T.col,[],X(3,:))
+%subplot(2,2,4)
+%scatter(T.row,T.col,[],X(4,:))
 
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
