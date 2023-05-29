@@ -1,8 +1,11 @@
 function [T,X]=BayesSpace(ste,markers)
 
-if nargin<2, markers=[]; end
 
-% assert(all(ismember(markers,ste.sce.g)))
+if nargin<2, markers=[]; end
+if ~isempty(markers)
+    assert(all(ismember(markers,ste.sce.g)));
+    n=length(markers)
+end
 T=[]; X=[];
 isdebug=false;
 
