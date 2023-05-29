@@ -13,6 +13,7 @@ usingmat<-TRUE
 
 if (usingmat) {
     counts <- h5read(file = "input.mat", name = "/X")
+    idx <- h5read(file = "input.mat", name = "/idx")
     countMatrix <- Matrix(as.matrix(counts))
     rownames(countMatrix) <- paste0("G", seq_len(nrow(countMatrix)))
     # colnames(countMatrix) <- paste0("C", seq_len(ncol(countMatrix)))    
@@ -53,7 +54,7 @@ sce <- spatialPreprocess(sce, platform="Visium",
                               n.PCs=7, n.HVGs=2000, log.normalize=FALSE)
 
 sce <- qTune(sce, qs=seq(2, 10), platform="Visium", d=7)
-qPlot(sce)
+# qPlot(sce)
 
 
 sce <- spatialCluster(sce, q=6, platform="Visium", d=7,
@@ -69,15 +70,18 @@ sce.enhanced <- spatialEnhance(sce, q=6, platform="Visium", d=7,
 
 write.csv(colData(sce.enhanced), "positions_enhanced.csv");
 
-markers <- c("G1", "G2", "G3", "G4")
-# markers <- paste0("G", seq_len(nrow(countMatrix)))
-sce.enhanced <- enhanceFeatures(sce.enhanced, sce,
-                                    feature_names=markers,
-                                    nrounds=0)
-X<-logcounts(sce.enhanced)[markers,]
-h5createFile("output.h5")
-h5write(as.matrix(X), "output.h5","/X")
 
-# rowData(sce.enhanced)[markers, ]
-# featurePlot(sce.enhanced, "PMEL")
 
+if (idx[1]!=0){
+    # markers <- c("G1", "G2", "G3", "G4")
+    markers <- paste0("G", idx)
+    sce.enhanced <- enhanceFeatures(sce.enhanced, sce,
+                                        feature_names=markers,
+                                        nrounds=0)
+    X<-logcounts(sce.enhanced)[markers,]
+    h5createFile("output.h5")
+    h5write(as.matrix(X), "output.h5","/X")
+
+    # rowData(sce.enhanced)[markers, ]
+    # featurePlot(sce.enhanced, "PMEL")
+}

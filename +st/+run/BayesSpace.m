@@ -1,5 +1,4 @@
-function [T,X]=BayesSpace(ste,markers)
-
+function [T,X,ste1]=BayesSpace(ste,markers)
 
 if nargin<2, markers=[]; end
 if ~isempty(markers)
@@ -8,6 +7,7 @@ if ~isempty(markers)
 else
     idx=[];
 end
+
 T=[]; X=[];
 isdebug=false;
 
@@ -31,24 +31,24 @@ Rpath=getpref('scgeatoolbox','rexecutablepath');
 pkg.RunRcode('script.R',Rpath);
 
 if ~exist('output.h5','file'), return; end
-web('Rplots.pdf','-browser')
+web('Rplots.pdf','-browser');
+warning('off','MATLAB:table:ModifiedAndSavedVarnames');
 T=readtable("positions_enhanced.csv");
+warning('on');
 
-%figure;
-%scatter(T.row,T.col,[],T.spatial_cluster)
-X=h5read('output.h5','/X');
-%figure;
-%subplot(2,2,1)
-%scatter(T.row,T.col,[],X(1,:))
-%subplot(2,2,2)
-%scatter(T.row,T.col,[],X(2,:))
-%subplot(2,2,3)
-%scatter(T.row,T.col,[],X(3,:))
-%subplot(2,2,4)
-%scatter(T.row,T.col,[],X(4,:))
+if ~isempty(idx)
+    X=h5read('output.h5','/X');
+end
+if size(X,1)~=length(idx)
+    X=[];
+end
 
+if nargout>2 && ~isempty(X) && ~isempty(markers)
+    sce1=SingleCellExperiment(X,markers);
+    sce1.struct_cell_clusterings.bayesspace=T.spatial_cluster;
+    ste1=SpatialTranscriptomicsExperiment(sce1,[T.row,T.col]);
+end
 
 if ~isdebug, pkg.i_deletefiles(tmpfilelist); end
 cd(oldpth);
 end
-

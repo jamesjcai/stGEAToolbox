@@ -1,5 +1,15 @@
 function st_scatter_ste(ste,varargin)
 
+p = inputParser;
+checkType = @(x) isa(x,'SpatialTranscriptomicsExperiment');
+addRequired(p,'ste',checkType);
+addOptional(p,'c',sum(ste.sce.X))
+addOptional(p,'dsize',15)
+
+parse(p,ste,varargin{:})
+c=p.Results.c;
+dsize=p.Results.dsize;
+
 import mlreportgen.ppt.*;
 if ismcc || isdeployed
   makePPTCompilable();
@@ -8,7 +18,8 @@ mfolder = fileparts(mfilename('fullpath'));
 sce=ste.sce;
 xy=ste.xy;
 img=ste.img;
-c=sum(sce.X);
+
+%c=sum(sce.X);
 %c=log(c(:)+1);
 
 FigureHandle = figure('Name', 'STGEATool - Spatial Transcriptomic Gene Expression Analysis Tool', ...
@@ -34,7 +45,7 @@ hAx = axes('Parent', FigureHandle);
 m_ext = uimenu(FigureHandle,'Text','E&xternal','Accelerator','x');
 i_addmenu(m_ext,0,@gui.i_setrenv,'Check R Environment');
 i_addmenu(m_ext,0,@gui.i_setpyenv,'Check Python Environment');
-i_addmenu(m_ext,1,@callback_BAYESSPACE,'Run BayesSpace...');
+i_addmenu(m_ext,1,@callback_BAYESSPACE,'Run BayesSpace [PMID:34083791]...');
 
 
 m_exp = uimenu(FigureHandle,'Text','Ex&perimental','Accelerator','p');
@@ -52,7 +63,7 @@ i_addmenu(m_exp,1,{@(~,~) web('https://github.com/jamesjcai/stGEAToolbox')},'Vis
 i_addmenu(m_exp,0,@st.gui.callback_CheckUpdates,'Check for Updates...');
 
 currentrotview=2;
-dsize=15;
+% dsize=15;
 
 
 h2=plotimg;
@@ -70,8 +81,9 @@ grid on
 dt = datacursormode;
 dt.UpdateFcn = {@i_myupdatefcnx};
 
-i_seth1cdata(true,'Library Size');
+% i_seth1cdata(true,'Library Size');
 % i_seth1cdata(true,'nFeatures, log');
+
 view(currentrotview);
 
 DftoolbarHandle = findall(FigureHandle, 'tag','FigureToolBar');
@@ -1078,7 +1090,7 @@ gui_currenthandle=[];
         gui.i_setautumncolor(cx,'parula');
         title(g)
         cb=colorbar;
-        cb.Label.String = 'UMI';
+        cb.Label.String = 'Expression Level';
         pkg.i_addbutton2fig(tb,'off',{@i_RescaleExpr,h,cb},'IMG00067.GIF','Scale expression level using log2-transformation');
         pkg.i_addbutton2fig(tb,'off',{@i_ResetExpr,h,cx,cb},'IMG00074.GIF','Reset expression level to UMI');
         pkg.i_addbutton2fig(tb,'on',{@i_genecards,g},'fvtool_fdalinkbutton.gif','GeneCards...');
@@ -1100,12 +1112,18 @@ gui_currenthandle=[];
 
     function i_ResetExpr(~,~,h,v,cb)
         set(h,'CData',v);
-        cb.Label.String = 'UMI';
+        cb.Label.String = 'Expression Level';
     end
 
     function i_seth1cdata(iscontinuous,ttxt)
         cx=c;
-        if nargin<1, iscontinuous=true; end
+        if nargin<1
+            if length(unique(cx))<=20
+                iscontinuous=true;
+            else
+                iscontinuous=false;
+            end
+        end
         if nargin<2, ttxt=[]; end
         set(h1,'CData',cx);
         colormap default
@@ -1231,18 +1249,43 @@ gui_currenthandle=[];
 
     function callback_BAYESSPACE(~,~)
         [glist]=gui.i_selectngenes(sce);
+        if isempty(glist)
+            helpdlg('No feature genes selected.','');
+            return;
+        end
+        fw=gui.gui_waitbar;
         try
-            [T,X]=st.run.BayesSpace(ste,glist);
+            [T,X,ste1]=st.run.BayesSpace(ste,glist);
+        catch ME
+            gui.gui_waitbar(fw,true);
+            errordlg(ME.message);
+            return;
+        end
+        gui.gui_waitbar(fw);
+        try
+            if ~isempty(T)
+                %figure;
+                %scatter(T.row,T.col,15,T.spatial_cluster,'filled');
+                %axis ij;
+                if ~isempty(ste1)
+                    answer=questdlg('Show STE with enhancement of spatial resolution?','');
+                    if strcmp(answer,'Yes')
+                        st_scatter_ste(ste1,'c',T.spatial_cluster,'dsize',10);
+                    end
+                end
+                if ~isempty(X)
+                    answer=questdlg('Show feature genes in spatially-enhanced STE?','');
+                    if strcmp(answer,'Yes')
+                        sce1=SingleCellExperiment(X,glist);
+                        % sce1.struct_cell_clusterings.bayesspace=T.spatial_cluster;
+                        for k=1:length(glist)
+                             i_cascadeexpr(sce1,glist(k),[T.row,T.col],k);
+                        end
+                    end
+                end
+            end
         catch ME
             errordlg(ME.message);
-        end
-        figure;
-        scatter(T.row,T.col,15,T.spatial_cluster,'filled');
-        axis ij;
-
-        sce1=SingleCellExperiment(X,glist);
-        for k=1:length(glist)
-             i_cascadeexpr(sce1,glist(k),[T.row,T.col],k);
         end
     end
 
