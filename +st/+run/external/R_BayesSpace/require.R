@@ -1,10 +1,18 @@
 if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+    install.packages("BiocManager", repo = "http://cran.rstudio.com/")
 
-BiocManager::install("BayesSpace")
+if (!require("SingleCellExperiment", quietly = TRUE))
+    BiocManager::install("SingleCellExperiment")
 
-library(SingleCellExperiment)
+if (!require("BayesSpace", quietly = TRUE))
+    BiocManager::install("BayesSpace")
+
+if (!require("rhdf5", quietly = TRUE))
+    BiocManager::install("rhdf5")
+
+
+#library(SingleCellExperiment)
 #library(ggplot2)
-library(BayesSpace)
+#library(BayesSpace)
 # https://edward130603.github.io/BayesSpace/articles/BayesSpace.html
-library(rhdf5)
+#library(rhdf5)

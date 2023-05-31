@@ -1,5 +1,5 @@
 function [ok,msg]=commoncheck_R(rscriptdir,externalfolder)
-
+disp('Using commoncheck_R for STE.')
 if nargin<2, externalfolder='external'; end
 ok=false; msg=[];
 
@@ -31,5 +31,3 @@ end
 ok=true;
 % disp('commoncheck_R is Done.');
 end
-
-
