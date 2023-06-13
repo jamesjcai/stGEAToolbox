@@ -111,7 +111,11 @@ ptx.CData = ptImagex;
 ptx.Tooltip = 'Move spot plot';
 ptx.ClickedCallback = @callback_MOVEIT;
 
-i_addbutton(UitoolbarHandle,'off',@callback_TURNMIONOFF,'reficon.gif','Manual alignment tool on/off');
+i_addbutton_toggle(1,0,{@togglebtfun,@callback_TURNMIONOFF,"icon-mat-unfold-more-10.gif", ...
+    "icon-mat-unfold-less-10.gif",false},"Turn on/off user onboarding toolbar");
+
+%i_addbutton(UitoolbarHandle,'off',@callback_TURNMIONOFF,'reficon.gif','Manual alignment tool on/off');
+
 i_addbutton(UitoolbarHandle,'on', @callback_DOTSIZE,'noun_font_size_591141.gif','Increase dot size');
 i_addbutton(UitoolbarHandle,'off',@callback_DOTALPHA,'plotpicker-rose.gif','Increase dot transparency');
 i_addbutton(UitoolbarHandle,'off',@callback_RANDCOLOR,"plotpicker-compass.gif","Pick new color map")
@@ -137,7 +141,7 @@ i_addbutton(UitoolbarHandle,'off',@callback_MARKHEATMAP,"plotpicker-plotmatrix.g
 % i_addbutton(UitoolbarHandle,'off',{@gui.callback_MarkerGeneHeatmap,sce},"plotpicker-plotmatrix.gif","Marker gene heatmap")
 i_addbutton(UitoolbarHandle,'on', @callback_CLUSPOP,"plotpicker-geoscatter.gif","Show cell clusters/groups individually")
 i_addbutton(UitoolbarHandle,'on', @callback_SAVESTE,"export.gif","Export & save data");
-i_addbutton(UitoolbarHandle,'off',@gui.callback_CloseAllOthers,"noun_Pruners_2469297.gif","Close All Other Figures")
+i_addbutton(UitoolbarHandle,'off',@gui.callback_CloseAllOthers,"icon-fa-cut-10.gif","Close All Other Figures")
 
 i_addbutton(DftoolbarHandle,'off',@callback_NOTHING,"IMG00107.GIF"," ");
 i_addbutton(DftoolbarHandle,'on',@callback_CELLSCORES,"cellscore2.gif","Calculate Cell Scores from List of Feature Genes")
@@ -1380,6 +1384,59 @@ guidata(FigureHandle, ste);
         uimenu(menuHdl,'Text',tooltipTxt,...
             'Separator',septag,...
             'Callback',callbackFnc);
+    end
+
+    function i_addbutton_toggle(toolbarHdl,sepTag,callbackFnc,tooltipTxt)
+        imgFil=callbackFnc{3};
+        %if ischar(callbackFnc{1}) || isstring(callbackFnc{1})
+        %    callbackFnc=str2func(callbackFnc{1});
+        %end
+        if sepTag==1
+            septag='on';
+        else
+            septag='off';
+        end
+        if toolbarHdl==0
+            barhandle=MitoolbarHandle;
+        elseif toolbarHdl==1
+            barhandle=UitoolbarHandle;
+        end
+        pt =  uitoggletool (barhandle, 'Separator', septag);
+        
+        try   
+            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(img, map);
+        catch
+            ptImage = rand(16,16,3);
+        end
+        pt.CData = ptImage;
+        pt.Tooltip = tooltipTxt;
+        pt.ClickedCallback = callbackFnc;
+    end
+
+    function togglebtfun(src,~,func,imgFil1,imgFil2,actiondelay)
+        if nargin<6, actiondelay=true; end
+        try
+            if src.State=="off"
+               imgFil=imgFil1;
+            elseif src.State=="on"
+               imgFil=imgFil2;
+            end
+            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(img, map);
+        catch
+            ptImage = rand(16,16,3);
+        end
+        src.CData = ptImage;
+        if actiondelay
+            if src.State=="off"
+                func(src);
+            else
+                uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.',''));
+            end
+        else
+            func(src);
+        end
     end
 
 
