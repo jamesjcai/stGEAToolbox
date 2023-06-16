@@ -105,9 +105,7 @@ i_addbutton(MitoolbarHandle,'off',{@callback_FLIP,2},'flipy.gif','Flip along X')
 i_addbutton(MitoolbarHandle,'off',{@callback_FLIP,1},'flipx.gif','Flip along Y');
 
 ptx = uitoggletool(MitoolbarHandle, 'Separator', 'on');
-[imgx, mapx] = imread(fullfile(mfolder, 'resources', 'hand.gif'));
-ptImagex = ind2rgb(imgx, mapx);
-ptx.CData = ptImagex;
+ptx.CData = i_get_ptImage('hand.gif');
 ptx.Tooltip = 'Move spot plot';
 ptx.ClickedCallback = @callback_MOVEIT;
 
@@ -1145,21 +1143,13 @@ guidata(FigureHandle, ste);
         end
     end
 
-    function i_addbutton(Handle,septag,callbackFnc,imgFil,tooltipTxt)
-        if nargin<4, septag='off'; end
+    function i_addbutton(Handle,sepTag,callbackFnc,imgFil,tooltipTxt)
+        if nargin<4, sepTag='off'; end
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc=str2func(callbackFnc);
         end
-        pt = uipushtool(Handle, 'Separator', septag);        
-        try
-            %copyfile(fullfile(matlabroot, ...
-            %    'toolbox', 'matlab', 'icons', imgFil),'./resources/');
-            [imga, mapa] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(imga, mapa);
-        catch
-            ptImage = rand(16,16,3);
-        end
-        pt.CData = ptImage;
+        pt = uipushtool(Handle, 'Separator', sepTag);        
+        pt.CData = i_get_ptImage(imgFil);
         pt.Tooltip = tooltipTxt;
         %if iscell(callbackFnc)
         %    pt.ClickedCallback = {callbackFnc{1},callbackFnc{2}};
@@ -1376,13 +1366,8 @@ guidata(FigureHandle, ste);
         if ischar(callbackFnc) || isstring(callbackFnc)
             callbackFnc=str2func(callbackFnc);
         end
-        if sepTag==1
-            septag='on';
-        else
-            septag='off';
-        end
         uimenu(menuHdl,'Text',tooltipTxt,...
-            'Separator',septag,...
+            'Separator',sepTag,...
             'Callback',callbackFnc);
     end
 
@@ -1402,32 +1387,19 @@ guidata(FigureHandle, ste);
             barhandle=UitoolbarHandle;
         end
         pt =  uitoggletool (barhandle, 'Separator', septag);
-        
-        try   
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);
-        catch
-            ptImage = rand(16,16,3);
-        end
-        pt.CData = ptImage;
+        pt.CData = i_get_ptImage(imgFil);
         pt.Tooltip = tooltipTxt;
         pt.ClickedCallback = callbackFnc;
     end
 
     function togglebtfun(src,~,func,imgFil1,imgFil2,actiondelay)
         if nargin<6, actiondelay=true; end
-        try
             if src.State=="off"
                imgFil=imgFil1;
             elseif src.State=="on"
                imgFil=imgFil2;
             end
-            [img, map] = imread(fullfile(mfolder, 'resources', imgFil));
-            ptImage = ind2rgb(img, map);
-        catch
-            ptImage = rand(16,16,3);
-        end
-        src.CData = ptImage;
+        src.CData = i_get_ptImage(imgFil);
         if actiondelay
             if src.State=="off"
                 func(src);
@@ -1439,5 +1411,13 @@ guidata(FigureHandle, ste);
         end
     end
 
+    function [ptImage]=i_get_ptImage(imgFil)
+        try
+            [imgx, mapx] = imread(fullfile(mfolder, 'resources', imgFil));
+            ptImage = ind2rgb(imgx, mapx);
+        catch
+            ptImage = rand(16,16,3);
+        end
+    end
 
 end
