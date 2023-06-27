@@ -14,5 +14,5 @@ for l=1:size(mIdx,1)
     Y(:,l)=mean(X(:,mIdx(l,2:end)),2);
 end
 Data=[lamda*X; (1-lamda)*Y];
-idx=run.SC3(Data,numclass);
+idx=run.mt_SC3(Data,numclass);
 
