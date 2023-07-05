@@ -1266,7 +1266,7 @@ guidata(FigureHandle, ste);
                             'Save BayesSpace output to variable named:'}; 
                         vars = {'ste_enhanced','T_bayesspace'};
                         values = {ste1,T};
-                        [~,OKPressed]=export2wsdlg(labels,vars,values,...
+                        [~,~]=export2wsdlg(labels,vars,values,...
                             'Save Data to Workspace', logical([1 1]));
                     end
                     answer=questdlg('Show STE with enhancement of spatial resolution?','');

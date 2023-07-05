@@ -74,8 +74,8 @@ hBr.ActionPostCallback = {@onBrushAction,h1,h2};
 set(f0,'Visible',true);
 
 
-function [txt] = i_myupdatefcnx12(Target, event_obj)
-
+function [txt] = i_myupdatefcnx12(~, ~)
+    txt='';
 end
 
 function onBrushAction(~,event,h1,h2)

@@ -1,4 +1,4 @@
-function [ok,msg]=commoncheck_R(rscriptdir)
+function [ok,msg]=OLD_commoncheck_R(rscriptdir)
 
 ok=false; msg=[];
 

@@ -1,4 +1,4 @@
-function st_showccires(T,RES,cx,ste)
+function st_showccires(T,~,cx,ste)
 import mlreportgen.ppt.*
 %  [T,RES,cx]=st_ridgecci(ste,c,x1,x2,K,methodid);
 % RES{1}=nv,vv}

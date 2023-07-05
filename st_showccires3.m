@@ -46,7 +46,7 @@ xx=1;
         size(nv)
         size(vv)
 
-        [~,p,kstat]=kstest2(nv,vv)
+        [~,~,~]=kstest2(nv,vv);
         figure
         cdfplot(nv); 
         hold on 
