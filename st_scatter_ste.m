@@ -247,6 +247,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     function callback_CTYPECORES(src, ~)
+        disp('gui.callback_CellTypeMarkerScores');
         [cs, ttxt] = gui.callback_CellTypeMarkerScores(src, [], sce);
         if ~isempty(cs) && ~isempty(ttxt)
             c = cs;
