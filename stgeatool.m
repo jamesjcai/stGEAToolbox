@@ -48,25 +48,25 @@ function stgeatool(sce, img, xy)
                     if isequal(fname, 0), return; end
                     stefile = fullfile(pathname, fname);
                     try
-                        fw = st.gui.gui_waitbar_simple;
+                        fw = gui.gui_waitbar;
                         load(stefile, 'ste');
                     catch ME
-                        st.gui.gui_waitbar_simple(fw, true);
+                        gui.gui_waitbar(fw, true);
                         errordlg(ME.message);
                         return;
                     end
-                    st.gui.gui_waitbar_simple(fw);
+                    gui.gui_waitbar(fw);
     
                 case '10x Visium ''outs'' Folder...'
                     selpath = uigetdir;
                     if selpath == 0, return; end
                     try
-                        fw = st.gui.gui_waitbar_simple;
+                        fw = gui.gui_waitbar;
     
                         [ste] = st_read10xdir(selpath);
-                        st.gui.gui_waitbar_simple(fw);
+                        gui.gui_waitbar(fw);
                     catch ME
-                        st.gui.gui_waitbar_simple(fw, true);
+                        gui.gui_waitbar(fw, true);
                         errordlg(ME.message);
                         return;
                     end
@@ -89,12 +89,12 @@ function stgeatool(sce, img, xy)
                             %                         [sce]=pkg.pipeline_multisamplesmerge(accv);
                         else
                             try
-                                fw = st.gui.gui_waitbar_simple;
+                                fw = gui.gui_waitbar;
                                 % [sce]=sc_readgeoaccession(acc);
                                 [ste] = st_readgeoaccession(acc);
-                                st.gui.gui_waitbar_simple(fw);
+                                gui.gui_waitbar(fw);
                             catch ME
-                                st.gui.gui_waitbar_simple(fw);
+                                gui.gui_waitbar(fw);
                                 errordlg(ME.message);
                                 return;
                             end
