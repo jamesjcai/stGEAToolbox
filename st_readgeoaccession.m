@@ -28,23 +28,31 @@ img = imread(f2);
 %imshow(img)
 
 posnotfound = false;
-c1 = c(contains(c, 'csv') & contains(c, 'positions'));
-if isempty(c1)
-    c1 = c(contains(c, 'txt') & contains(c, 'positions'));
-    if isempty(c1)
-        c1 = c(contains(c, 'tsv') & contains(c, 'positions'));
-        if isempty(c1)
-            posnotfound = true;
-            % error('TXT/CSV/TSV file not found.');
-        end
-    end
-end
-if ~posnotfound % found position file
 
+% c1 = c(contains(c, 'csv') & contains(c, 'positions'));
+% if isempty(c1)
+%     c1 = c(contains(c, 'txt') & contains(c, 'positions'));
+%     if isempty(c1)
+%         c1 = c(contains(c, 'tsv') & contains(c, 'positions'));
+%         if isempty(c1)
+%             c1 = c(contains(c, 'tsv') & contains(c, 'positions'));
+%             if isempty(c1)
+%                 posnotfound = true;
+%                 % error('TXT/CSV/TSV file not found.');
+%             end
+%         end
+%     end
+% end
+
+c1 = c(contains(c, {'csv', 'txt', 'tsv'}) & contains(c, ...
+       {'positions', 'coordinates'}));
+if isempty(c1), posnotfound = true; end
+
+if ~posnotfound % found position file
     if length(c1) > 1, c1 = c1(1); end
     f1 = i_setupfile(c1);
     if isempty(f1), error('TISSUE_POSITION CSV/TXT/TSV file name not processed.'); end
-
+    f1
     T = readtable(f1);
 
 else
