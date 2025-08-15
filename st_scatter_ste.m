@@ -37,11 +37,11 @@ delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuUpdateFileNew');
 delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuOpen');
-a.MenuSelectedFcn = 'stgeatool';
+%a.MenuSelectedFcn = 'stgeatool';
 a = findall(FigureHandle, 'tag', 'figMenuFileSaveAs');
 delete(a);
 a = findall(FigureHandle, 'tag', 'figMenuFileSave');
-a.MenuSelectedFcn = @callback_SAVESTE;
+%a.MenuSelectedFcn = @callback_SAVESTE;
 a = findall(FigureHandle, 'tag', 'figMenuGenerateCode');
 delete(a);
 

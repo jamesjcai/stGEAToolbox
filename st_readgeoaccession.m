@@ -81,7 +81,7 @@ end
 
 scedone = false;
 try
-    sce = sc_readgeoaccession(acc);
+    sce = sc_readgeoaccess(acc);
     scedone = true;
 catch
     scedone = false;
