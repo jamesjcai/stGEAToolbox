@@ -72,15 +72,15 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
 
     h2 = plotimg;
     slidshown = true;
-    hold on
+    hold(hAx,"on");
 
     h1 = plotspo;
     %dt = datacursormode;
     %dt.UpdateFcn = {@i_myupdatefcnx1};
 
     %hold on
-    box on
-    grid on
+    box(hAx, "on");
+    grid(hAx, "on");
 
     dt = datacursormode;
     dt.UpdateFcn = {@i_myupdatefcnx};
@@ -88,7 +88,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     % i_seth1cdata(true,'Library Size');
     % i_seth1cdata(true,'nFeatures, log');
 
-    view(currentrotview);
+    view(hAx,currentrotview);
 
     DftoolbarHandle = findall(FigureHandle, 'tag', 'FigureToolBar');
     UitoolbarHandle = uitoolbar('Parent', FigureHandle);
@@ -917,10 +917,10 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
                 'CData', img, 'FaceColor', 'texturemap');
                 %axis tight
                 %axis image
-            case 2
-                h = imagesc(img);
+            case 2                
+                h = imagesc(hAx, img);
                 %axis ij
-                axis tight
+                axis(hAx, "tight");
             case 3
                 h = imshow(img);
         end
@@ -1429,11 +1429,14 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
                 func(src);
             else
                 uiwait(helpdlg('To execute the function, click the button again or locate and click the same button in the toolbar above. Hover over the button to view a description of its function.', ''));
-                end
-            else
-                func(src);
             end
+
+        else
+            func(src);
+            
         end
+    end
+
 
             function [ptImage] = i_get_ptImage(imgFil)
                 try

@@ -45,13 +45,30 @@ scalef = jsondecode(txt);
 %     scalef.tissue_lowres_scalef=value.tissue_lowres_scalef;
 
 
+
 position_file = fullfile(imgfolder, sprintf('%stissue_positions_list.csv', aff));
-if ~exist(position_file, 'file')
-    position_file = fullfile(imgfolder, sprintf('%stissue_positions.csv', aff));
-    T = readtable(position_file, 'ReadVariableNames', true);
-else
-    T = readtable(position_file, 'ReadVariableNames', false);
+
+tryparquet = false;
+try
+    if ~exist(position_file, 'file')
+        position_file = fullfile(imgfolder, sprintf('%stissue_positions.csv', aff));
+        T = readtable(position_file, 'ReadVariableNames', true);
+    else
+        T = readtable(position_file, 'ReadVariableNames', false);
+    end
+catch ME
+    disp('tissue_positions.csv not found.');
+    tryparquet = true;
 end
+
+if tryparquet
+    position_file = fullfile(imgfolder, sprintf('%stissue_positions.parquet', aff));
+    T = parquetread(position_file,'SelectedVariableNames', ...
+        ["barcode","pxl_row_in_fullres","pxl_col_in_fullres"]);
+end
+
+
+
 
 
 [X, genelist, celllist] = sc_readhdf5file(h5fname);

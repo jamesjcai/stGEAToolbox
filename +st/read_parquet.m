@@ -1,0 +1,13 @@
+%import pandas as pd
+%file_path = "tissue_positions.parquet"
+%data = pd.read_parquet(file_path)
+
+position_file = 'tissue_positions.parquet';
+a = pyrun(["import pandas as pd", ...
+    "data = pd.read_parquet(file_path)",...
+    "print(data.head())", ...
+    "barcode=data.barcode"], "barcode", file_path=position_file);
+
+%a = pyrun(["import pandas as pd", ...
+%    "data = pd.read_parquet(""tissue_positions.parquet"")"], "data");
+
