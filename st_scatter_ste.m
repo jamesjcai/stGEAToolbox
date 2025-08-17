@@ -15,6 +15,14 @@ if ismcc || isdeployed
     makePPTCompilable();
 end
 mfolder = fileparts(mfilename('fullpath'));
+
+if any(sum(ste.sce.X,2)==0)
+    ix1 = sum(ste.sce.X,2) > 0;
+    ste.sce.g = ste.sce.g(ix1);
+    ste.sce.X = ste.sce.X(ix1,:);
+    fprintf('Empty genes (n = %d) are removed.\n', full(sum(~ix1)));
+end
+
 sce = ste.sce;
 xy = ste.xy;
 img = ste.img;
@@ -959,16 +967,20 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
                 error('Invalid option DIRTAG.');
         end
         xy = a + mean(xy);
+        hasBDFcn = ~isempty(get(h1, 'ButtonDownFcn'));
         delete(h1);
         set(ptx, 'State', 'off');
         h1 = plotspo;
+        if hasBDFcn, set(h1, 'ButtonDownFcn', @startmovit); end
     end
 
     function callback_FLIP(~, ~, tag)
+        hasBDFcn = ~isempty(get(h1, 'ButtonDownFcn'));
         delete(h1);
         set(ptx, 'State', 'off');
         xy(:, tag) = -(xy(:, tag)) + 2 * mean(xy(:, tag));
         h1 = plotspo;
+        if hasBDFcn, set(h1, 'ButtonDownFcn', @startmovit); end
     end
 
     function callback_MOVEIT(~, ~)
@@ -1048,9 +1060,11 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
         end
         a = xy - mean(xy);
         xy = ([cos(theta), -sin(theta); sin(theta), cos(theta)] * a')' + mean(xy);
+        hasBDFcn = ~isempty(get(h1, 'ButtonDownFcn'));
         delete(h1);
         set(ptx, 'State', 'off');
         h1 = plotspo;
+        if hasBDFcn, set(h1, 'ButtonDownFcn', @startmovit); end
     end
 
     function callback_HIDESPO(~, ~)
@@ -1349,7 +1363,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     function [i1, i2] = i_select2grps(thisc)
         i1 = 0;
         i2 = 0;
-        if numel(unique(thisc)) == 1
+        if isscalar(unique(thisc))
             warndlg("Cannot compare with an unique group");
             return;
         end

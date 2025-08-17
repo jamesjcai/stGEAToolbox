@@ -23,6 +23,8 @@ function stgeatool(sce, img, xy)
         if nargin < 1
             list = {'STE Data File (*.mat)...', ...
                 '10x Visium ''outs'' Folder...', ...
+                '10x Visium HD ''binned_outs'' Folder...', ...
+                '10x Visium HD ''segmented_outs'' Folder...', ...
                 '----------------------------------', ...
                 'GEO Accession Number...', ...
                 '----------------------------------', ...
@@ -57,7 +59,8 @@ function stgeatool(sce, img, xy)
                     end
                     gui.gui_waitbar(fw);
     
-                case '10x Visium ''outs'' Folder...'
+                case {'10x Visium ''outs'' Folder...', 
+                        '10x Visium HD ''binned_outs'' Folder...'}
                     selpath = uigetdir;
                     if selpath == 0, return; end
                     try
@@ -74,6 +77,18 @@ function stgeatool(sce, img, xy)
                     %metainfo=sprintf("Source: %s",selpath);
                     %sce=sce.appendmetainfo(metainfo);
                     % ste=SpatialTranscriptomicsExperiment(sce,img,xy);
+                case '10x Visium HD ''segmented_outs'' Folder'
+                     selpath = uigetdir;
+                    if selpath == 0, return; end
+                    try
+                        fw = gui.gui_waitbar;
+                        [ste] = st_readsegmenteddir(selpath);
+                        gui.gui_waitbar(fw);
+                    catch ME
+                        gui.gui_waitbar(fw, true);
+                        errordlg(ME.message);
+                        return;
+                    end
                 case 'GEO Accession Number...'
                     acc = inputdlg({'Input number (e.g., GSM5764426, GSM5764424 or GSM5213483):'}, ...
                         'GEO Accession', [1, 50], {'GSM4565826'});
@@ -168,6 +183,8 @@ function stgeatool(sce, img, xy)
             end
         end
         if isempty(ste), return; end
+
+        
         try
             st_scatter_ste(ste);
         catch ME

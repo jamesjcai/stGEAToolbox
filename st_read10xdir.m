@@ -63,8 +63,23 @@ end
 
 if tryparquet
     position_file = fullfile(imgfolder, sprintf('%stissue_positions.parquet', aff));
+    done=false;
+    try
     T = parquetread(position_file,'SelectedVariableNames', ...
         ["barcode","pxl_row_in_fullres","pxl_col_in_fullres"]);
+    done = true;
+    catch ME
+        disp(ME.message);
+    end
+    if ~done
+        try
+            df = pyrun(["import pandas as pd", ...
+                "df = pd.read_parquet(file_path)"], ...
+                "df", file_path = position_file);
+            T = table(df);
+        catch
+        end
+    end
 end
 
 
