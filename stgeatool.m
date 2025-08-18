@@ -4,6 +4,7 @@ function stgeatool(sce, img, xy)
     olddir = pwd();
     cdgea;
     cd(olddir);
+    classid = [];
     
     if ~(ismcc || isdeployed)
         if ~exist('grp2idx.m', 'file')
@@ -18,7 +19,8 @@ function stgeatool(sce, img, xy)
     
     if usejava('jvm') && ~feature('ShowFigureWindows')
         error('MATLAB is in a text mode. This function requires a GUI-mode.');
-        end
+    end
+
         promotesave = false;
         if nargin < 1
             list = {'STE Data File (*.mat)...', ...
@@ -77,7 +79,7 @@ function stgeatool(sce, img, xy)
                     %metainfo=sprintf("Source: %s",selpath);
                     %sce=sce.appendmetainfo(metainfo);
                     % ste=SpatialTranscriptomicsExperiment(sce,img,xy);
-                case '10x Visium HD ''segmented_outs'' Folder'
+                case {'10x Visium HD ''segmented_outs'' Folder...'}
                      selpath = uigetdir;
                     if selpath == 0, return; end
                     try
@@ -106,7 +108,7 @@ function stgeatool(sce, img, xy)
                             try
                                 fw = gui.gui_waitbar;
                                 % [sce]=sc_readgeoaccession(acc);
-                                [ste] = st_readgeoaccession(acc);
+                                [ste, classid] = st_readgeoaccession(acc);
                                 gui.gui_waitbar(fw);
                             catch ME
                                 gui.gui_waitbar(fw);
@@ -184,12 +186,16 @@ function stgeatool(sce, img, xy)
         end
         if isempty(ste), return; end
 
-        
-        try
+        % assignin("base","ste",ste);
+        %try
+        if isempty(classid)
             st_scatter_ste(ste);
-        catch ME
-            disp(ME.identifier);
-            errordlg(ME.message);
+        else
+            st_scatter_ste(ste,'c',classid);
         end
+        %catch ME
+        %    disp(ME.identifier);
+        %    errordlg(ME.message);
+        %end
     end
     

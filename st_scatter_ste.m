@@ -27,6 +27,9 @@ sce = ste.sce;
 xy = ste.xy;
 img = ste.img;
 
+% xy = max(size(img, [1 2])).*(xy./max(xy(:)));
+
+
 %c=sum(sce.X);
 %c=log(c(:)+1);
 
@@ -219,7 +222,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     function callback_CLUSPOP(~, ~)
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
         [c] = grp2idx(thisc);
         i_seth1cdata(false, ttxt);
@@ -493,7 +496,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     function callback_SVGANOVA(~, ~)
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
         c = grp2idx(thisc);
         i_seth1cdata(false, ttxt);
@@ -510,7 +513,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     function callback_DISTGRAD(~, ~)
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
         c = grp2idx(thisc);
         i_seth1cdata(false, ttxt);
@@ -539,7 +542,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     function [x1, x2] = i_pickridgegrps
         x1 = [];
         x2 = [];
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
 
         [c] = grp2idx(thisc);
@@ -684,7 +687,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     %     function callback_RIDGECCIPERM(~,~)
-    %         [thisc,ttxt]=gui.i_select1clusterings(sce);
+    %         [thisc,ttxt] = st.gui.i_select1clusterings(sce);
     %         if isempty(thisc), return; end
     %
     %         [c]=grp2idx(thisc);
@@ -806,7 +809,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     %     end
 
     function callback_SHOWSTATE(~, ~)
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
 
         if isempty(thisc), return; end
         [c, cL] = grp2idx(thisc);
@@ -870,7 +873,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     end
 
     function callback_MULTIVIEW(~, ~)
-        [thisc, ttxt] = gui.i_select1clusterings(sce);
+        [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
         [thiss, clable] = gui.i_select1embedding(sce);
         if isempty(thiss), return; end
