@@ -17,9 +17,9 @@ end
 mfolder = fileparts(mfilename('fullpath'));
 
 if any(sum(ste.sce.X,2)==0)
-    ix1 = sum(ste.sce.X,2) > 0;
-    ste.sce.g = ste.sce.g(ix1);
+    ix1 = sum(ste.sce.X,2) > 0;    
     ste.sce.X = ste.sce.X(ix1,:);
+    ste.sce.g = ste.sce.g(ix1);
     fprintf('Empty genes (n = %d) are removed.\n', full(sum(~ix1)));
 end
 
