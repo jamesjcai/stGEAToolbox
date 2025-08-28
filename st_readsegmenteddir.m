@@ -9,13 +9,9 @@ fprintf('Processing %s...\n', selpath);
 
 
 
-if ~isempty(aff)
-    h5fname = fullfile(selpath, sprintf('%sraw_feature_cell_matrix.h5', aff));
-    zh5fname = fullfile(selpath, sprintf('%sraw_feature_cell_matrix.h5.gz', aff));
-else
-    h5fname = fullfile(selpath, 'raw_feature_cell_matrix.h5');
-    zh5fname = fullfile(selpath, 'raw_feature_cell_matrix.h5.gz');
-end
+
+h5fname = fullfile(selpath, sprintf('%sraw_feature_cell_matrix.h5', aff));
+zh5fname = fullfile(selpath, sprintf('%sraw_feature_cell_matrix.h5.gz', aff));
 
 
 % h5fname=fullfile(selpath,'filtered_feature_bc_matrix.h5');
@@ -35,7 +31,8 @@ img = [];
 if exist(image_file,"file")
     try
         img = imread(image_file);
-    catch ME
+    catch ME        
+        disp(image_file);
         warning(ME.message);
     end
 end
