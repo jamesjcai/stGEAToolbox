@@ -30,13 +30,15 @@ if ~exist(h5fname, 'file')
     end
 end
 
-imgfolder = fullfile(selpath, 'spatial');
-if ~isempty(aff)
-    image_file = fullfile(imgfolder, sprintf('%stissue_hires_image.png', aff));
-else
-    image_file = fullfile(imgfolder, 'tissue_hires_image.png');
+image_file = fullfile(selpath, 'spatial', sprintf('%stissue_hires_image.png', aff));
+img = [];
+if exist(image_file,"file")
+    try
+        img = imread(image_file);
+    catch ME
+        warning(ME.message);
+    end
 end
-img = imread(image_file);
 
 json_paths = fullfile(sprintf('%sgraphclust_annotated_cell_segmentations.geojson', aff));
 jsonText = fileread(json_paths);
