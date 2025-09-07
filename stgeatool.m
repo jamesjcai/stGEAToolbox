@@ -108,7 +108,7 @@ function stgeatool(sce, img, xy)
                             try
                                 fw = gui.gui_waitbar;
                                 % [sce]=sc_readgeoaccession(acc);
-                                [ste, classid] = st_readgeoaccession(acc);
+                                [ste] = st_readgeoaccession(acc);
                                 gui.gui_waitbar(fw);
                             catch ME
                                 gui.gui_waitbar(fw);
