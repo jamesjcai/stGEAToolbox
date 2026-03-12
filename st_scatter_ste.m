@@ -36,6 +36,13 @@ img = ste.img;
 FigureHandle = figure('Name', 'STGEATool - Spatial Transcriptomic Gene Expression Analysis Tool', ...
     'position', round(1.25*[0, 0, 560, 420]), ...
     'visible', 'off');
+if ~isMATLABReleaseOlderThan('R2025a')
+    try
+        FigureHandle.Theme.BaseColorStyle='light';
+     catch
+    end
+end
+
 movegui(FigureHandle, 'center');
 set(findall(FigureHandle, 'ToolTipString', 'Link/Unlink Plot'), 'Visible', 'Off')
 set(findall(FigureHandle, 'ToolTipString', 'Edit Plot'), 'Visible', 'Off')
