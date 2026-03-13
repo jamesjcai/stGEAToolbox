@@ -91,7 +91,7 @@ for xx = 1:N
 end
 gui.gui_waitbar_adv(fw);
 
-[~, ~, ~, fdr] = pkg.fdr_bh(pval);
+[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
 T = table(lgene, rgene, numneigb, numouter, kstat, pval, fdr, ...
     avgneigb, avgouter, stdneigb, stdouter);
 [T] = sortrows(T, 'kstat', 'descend');

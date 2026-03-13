@@ -264,12 +264,25 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
         end
     end
 
-    function callback_CTYPECORES(src, ~)
-        disp('gui.callback_CellTypeMarkerScores');
-        [cs, ttxt] = gui.callback_CellTypeMarkerScores(src, [], sce);
-        if ~isempty(cs) && ~isempty(ttxt)
+    function callback_CTYPECORES(~, ~)
+        try
+            [~,T] = pkg.e_cellscores(sce.X, sce.g, 0);
+            listitems = T.ScoreType;
+            [indx, tf] = listdlg('PromptString', ...
+                {'Select Cell Type Score','',''}, ...
+                'SelectionMode', 'single', 'ListString', listitems, 'ListSize', [220, 300]);
+            if tf ~= 1, return; end
+            fw = gui.gui_waitbar;
+            [cs] = pkg.e_cellscores(sce.X, sce.g, indx);
+            ttxt = T.ScoreType(indx);
+            gui.gui_waitbar(fw);
+        catch ME
+            errordlg(ME.message);
+            return;
+        end
+        if ~isempty(cs)
             c = cs;
-            i_seth1cdata(true, ttxt);
+            i_seth1cdata(true, string(ttxt));
         end
     end
 
@@ -312,7 +325,6 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
 
     function callback_CELLSCORES(~, ~)
 
-        %{
         actiontype=questdlg('Select a predefined score or define a new score?',...
             'Select/Define Score','Select Predefined Score',...
             'Define New Score','Select Predefined Score');
@@ -324,16 +336,13 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
                 [indx,tf] = listdlg('PromptString',...
                     {'Select Class','',''},...
                     'SelectionMode','single','ListString',listitems,'ListSize',[220,300]);
-                if ~tf==1, return; end
-                %fw=gui.gui_waitbar;
+                if tf~=1, return; end
+                fw=gui.gui_waitbar;
                 [cs]=pkg.e_cellscores(sce.X,sce.g,indx);
                 ttxt=T.ScoreType(indx);
-                %gui.gui_waitbar(fw);
+                gui.gui_waitbar(fw);
             case 'Define New Score'
                 ttxt='Customized Score';
-                % Pd1=pdcd1 tim3=HAVCR2, tcf1=HNF1A  https://www.nature.com/articles/s41577-019-0221-9
-                % posgcandidates=["PDCD1","HNF1A","HAVCR2","KLRG1","CD44","LY6C","CTLA","ICOS","LAG3"];
-                %posgcandidates=sce.g(randi(length(sce.g),10,1));
                 [posg]=gui.i_selectngenes(sce.g);
                 if isempty(posg)
                     helpdlg('No feature genes selected.','')
@@ -347,14 +356,6 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
                 gui.gui_waitbar(fw);
             otherwise
                 return;
-        end
-        %}
-
-        try
-            [cs, ttxt] = gui.i_computecellscore(sce);
-        catch ME
-            errordlg(ME.message);
-            return;
         end
         if ~isempty(cs) && ~isempty(ttxt)
             c = cs;
@@ -440,8 +441,30 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
         i_seth1cdata(false, 'tSNE cluter id');
     end
 
-    function callback_MARKHEATMAP(src, events)
-        gui.callback_MarkerGeneHeatmap(src, events, sce);
+    function callback_MARKHEATMAP(~, ~)
+        if isscalar(unique(sce.c_cluster_id))
+            warndlg('All cells are in the same group.');
+            return;
+        end
+        fw = gui.gui_waitbar;
+        try
+            [c_cluster] = findgroups(sce.c_cluster_id);
+            [markerlist] = sc_pickmarkers(sce.X, sce.g, c_cluster, 10, 1);
+            glist = string(markerlist{1}(:));
+            for kk = 2:length(markerlist)
+                glist = [glist; string(markerlist{kk}(:))];
+            end
+        catch ME
+            gui.gui_waitbar(fw);
+            errordlg(ME.message);
+            return;
+        end
+        gui.gui_waitbar(fw);
+        [~, idx] = ismember(upper(glist), upper(sce.g));
+        idx = idx(idx > 0);
+        if isempty(idx), return; end
+        figure;
+        heatmap(full(sce.X(idx, :)));
     end
 
     function callback_CLUSSPO(~, ~)
@@ -882,8 +905,9 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
     function callback_MULTIVIEW(~, ~)
         [thisc, ttxt] = st.gui.i_select1clusterings(sce);
         if isempty(thisc), return; end
-        [thiss, clable] = gui.i_select1embedding(sce);
+        [thiss] = gui.i_pickembedvalues(sce);
         if isempty(thiss), return; end
+        clable = 'Embedding';
         f0 = figure('Visible', 'off');
         subplot(1, 2, 1);
         hh1 = scatter(xy(:, 1), xy(:, 2), 10, thisc, 'filled');
@@ -1362,10 +1386,7 @@ i_addmenu(m_exp, 0, @st.gui.callback_CheckUpdates, 'Check for Updates...');
         mycmap = pkg.i_mycolormap(n);
         co = {parula(n), lines(n), summer(n), ...
             jet(n), copper(n), winter(n), hsv(n), ...
-            mycmap, ...
-            gui.linspecer(min([n, 12]), 'qualitative'), ...
-            gui.linspecer(n, 'sequential'), ...
-            gui.linspecer(n, 'red'), gui.linspecer(n, 'gray'), gui.linspecer(n, 'green')};
+            mycmap, turbo(n), hot(n), cool(n), spring(n)};
         indx = randi(length(co));
         co = co{indx};
     end

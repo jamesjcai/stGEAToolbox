@@ -80,7 +80,7 @@ try
     if ~(ismcc || isdeployed)
         x = urldecode(x);
     else
-        x = pkg.urldecoding(x);
+        x = pkg.i_urldecoding(x);
     end
     fprintf('Downloading %s\n', x)
     files = gunzip(x, tmpd);

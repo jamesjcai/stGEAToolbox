@@ -18,6 +18,6 @@ end
 pval(isnan(pval)) = 1.0;
 F(isnan(F)) = 0.0;
 gene = ste.sce.g;
-[~, ~, ~, fdr] = pkg.fdr_bh(pval);
+[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
 T = table(gene, F, pval, fdr);
 [T, sortid] = sortrows(T, 'F', 'descend');

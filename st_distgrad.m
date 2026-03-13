@@ -19,6 +19,6 @@ for k = 1:ste.sce.NumGenes
 end
 pval(isnan(pval)) = 1.0;
 r(isnan(r)) = 0.0;
-[~, ~, ~, fdr] = pkg.fdr_bh(pval);
+[~, ~, ~, fdr] = pkg.e_fdr_bh(pval);
 T = table(gene, r, pval, fdr);
 [T, sortid] = sortrows(T, 'fdr', 'ascend');

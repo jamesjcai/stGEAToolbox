@@ -146,7 +146,7 @@ function [f] = i_setupfile(c)
         if ~(ismcc || isdeployed)
             x = urldecode(x);
         else
-            x = pkg.urldecoding(x);
+            x = pkg.i_urldecoding(x);
         end
         fprintf('Downloading %s\n', x)
         if strcmpi(extractAfter(x, length(x)-3), '.gz')
