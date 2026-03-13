@@ -2,9 +2,9 @@ function [idx] = cluster_resnet18(img, xy, numclass, sposz, plotit)
 
 %REF: https://doi.org/10.1101/2022.04.14.488259
 
-if nargin < 4, plotit = false; end
-if nargin < 3, numclass = 4; end
+if nargin < 5, plotit = false; end
 if nargin < 4, sposz = 40; end
+if nargin < 3, numclass = 4; end
 
 try
     net = resnet18();

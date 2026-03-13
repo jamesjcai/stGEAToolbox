@@ -34,9 +34,9 @@ MB = max(B(:));
 A = round((A - ma)*(L - 1)/(MA - ma + eps));
 B = round((B - mb)*(L - 1)/(MB - mb + eps));
 n = zeros(L);
-x = 0:L - 1;
+edges = (0:L) - 0.5;
 for i = 0:L - 1
-    n(i+1, :) = histc(B(A == i), x, 1);
+    n(i+1, :) = histcounts(B(A == i), edges);
 end
 end
 
@@ -62,9 +62,9 @@ end
 A = double(A);
 B = double(B);
 
-na = hist(A(:), L);
+na = histcounts(A(:), L);
 na = na / sum(na);
-nb = hist(B(:), L);
+nb = histcounts(B(:), L);
 nb = nb / sum(nb);
 n2 = hist2(A, B, L);
 n2 = n2 / sum(n2(:));

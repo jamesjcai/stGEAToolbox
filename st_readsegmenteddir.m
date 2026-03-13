@@ -37,7 +37,7 @@ if exist(image_file,"file")
     end
 end
 
-json_paths = fullfile(sprintf('%sgraphclust_annotated_cell_segmentations.geojson', aff));
+json_paths = fullfile(selpath, 'spatial', sprintf('%sgraphclust_annotated_cell_segmentations.geojson', aff));
 jsonText = fileread(json_paths);
 geoData = jsondecode(jsonText);
 
