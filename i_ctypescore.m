@@ -3,9 +3,8 @@ function [c, T, S] = i_ctypescore(X, g)
 stag = 'hs';
 markerfile = sprintf('marker_%s.mat', stag);
 
-pw1 = fileparts(mfilename('fullpath'));
-markerfile = fullfile(pw1, '..', 'scGEAToolbox', ...
-    '+run', 'thirdparty', 'alona_panglaodb', markerfile);
+scgeapw1 = fileparts(which('scgeatool'));
+markerfile = fullfile(scgeapw1, 'external', 'fun_alona_panglaodb', markerfile);
 
 if exist(markerfile, 'file')
     load(markerfile, 'Tw', 'Tm');

@@ -10,7 +10,7 @@ if nargin < 3, idx1 = 1; end % source cell group id (ligand gene expressed)
 
 
 [a, b] = cdgea;
-load(fullfile(a, 'resources', 'Ligand_Receptor.mat'), ...
+load(fullfile(a, 'assets', 'Ligand_Receptor', 'Ligand_Receptor.mat'), ...
     'ligand', 'receptor');
 cd(b);
 valididx = ismember(ligand, ste.sce.g) & ismember(receptor, ste.sce.g);
