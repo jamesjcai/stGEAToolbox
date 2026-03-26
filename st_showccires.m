@@ -103,9 +103,9 @@ gui.i_setautumncolor(cx, 'parula');
 title(g)
 cb = colorbar;
 cb.Label.String = 'UMI';
-pkg.i_addbutton2fig(tb, 'off', {@i_RescaleExpr, h, cb}, 'IMG00067.GIF', 'Scale expression level using log2-transformation');
-pkg.i_addbutton2fig(tb, 'off', {@i_ResetExpr, h, cx, cb}, 'IMG00074.GIF', 'Reset expression level to UMI');
-pkg.i_addbutton2fig(tb, 'on', {@i_genecards, g}, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
+gui.i_addbutton2fig(tb, 'off', {@i_RescaleExpr, h, cb}, 'IMG00067.GIF', 'Scale expression level using log2-transformation');
+gui.i_addbutton2fig(tb, 'off', {@i_ResetExpr, h, cx, cb}, 'IMG00074.GIF', 'Reset expression level to UMI');
+gui.i_addbutton2fig(tb, 'on', {@i_genecards, g}, 'fvtool_fdalinkbutton.gif', 'GeneCards...');
 P = get(f, 'Position');
 set(f, 'Position', [P(1) - 20 * k, P(2) - 20 * k, P(3), P(4)]);
 set(f, 'visible', 'on');
